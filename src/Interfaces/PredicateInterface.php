@@ -11,5 +11,5 @@ namespace Dorian\XPathHelper\Interfaces;
 
 interface PredicateInterface
 {
-
+    public function __toString();
 }

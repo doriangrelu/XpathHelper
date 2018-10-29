@@ -22,13 +22,21 @@ class Queue
      */
     private $_queue = [];
 
+    private $_reversePop;
+
     /**
      * Cue constructor.
      * @param array $array
+     * @param bool $reversePop
      */
-    public function __construct(array $array = [])
+    public function __construct(array $array = [], $reversePop = false)
     {
-        $this->_cue = array_reverse($array);
+        if ($reversePop) {
+            $array = array_reverse($array);
+        }
+        $this->_queue = $array;
+        $this->_reversePop = $reversePop;
+
     }
 
     /**
@@ -49,10 +57,17 @@ class Queue
         return $this;
     }
 
+    public function pushAndMerge($element, $join = ''):self
+    {
+        $index = count($this->_queue) - 1;
+        $this->_queue[$index] = $this->_queue[$index] . $join . $element;
+        return $this;
+    }
+
     /**
      * @return array
      */
-    public function getQueue():array
+    public function getQueue(): array
     {
         return $this->_queue;
     }
@@ -65,12 +80,22 @@ class Queue
         if (empty($this->_queue)) {
             return null;
         }
+        return ($this->_reversePop ? $this->_reversePop() : $this->_normalPop());
+    }
+
+    private function _reversePop()
+    {
         $element = $this->_queue[$this->_index] ?? null;
         if (isset($this->_queue[$this->_index])) {
             $this->_queue[$this->_index] = null;
             $this->_index++;
         }
         return $element;
+    }
+
+    private function _normalPop()
+    {
+        return array_pop($this->_queue);
     }
 
 }

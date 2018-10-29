@@ -11,9 +11,12 @@ namespace Dorian\XPathHelper;
 
 use Dorian\XPathHelper\Core\Queue;
 use Dorian\XPathHelper\Exception\XPathHelperException;
-use Dorian\XPathHelper\Interfaces\PredicateInterface;
-use Dorian\XPathHelper\Interfaces\XPathAxesInterface;
+use Dorian\XPathHelper\Interfaces\{PredicateInterface, XPathAxesInterface};
 
+/**
+ * Class XPathHelper
+ * @package Dorian\XPathHelper
+ */
 class XPathHelper implements XPathAxesInterface
 {
     /**
@@ -170,7 +173,7 @@ class XPathHelper implements XPathAxesInterface
     /**
      * @return mixed
      */
-    public function evaluate(): mixed
+    public function evaluate()
     {
 
     }
@@ -178,9 +181,11 @@ class XPathHelper implements XPathAxesInterface
     /**
      * @param string $filter
      * @return XPathHelper
+     * @throws XPathHelperException
      */
     public function children(string $filter): self
     {
+
         $this->_queue->push($this->_getExpression('child', $filter));
         return $this;
     }
@@ -188,6 +193,7 @@ class XPathHelper implements XPathAxesInterface
     /**
      * @param string $filter
      * @return XPathHelper
+     * @throws XPathHelperException
      */
     public function descendantOrSelf(string $filter): self
     {
@@ -210,6 +216,11 @@ class XPathHelper implements XPathAxesInterface
      */
     public function addPredicate(PredicateInterface $predicate): self
     {
+        $predicate = $predicate->__toString();
+        if($this->_fullExpression===false){
+            $predicate = str_replace('position()=', '', $predicate);
+        }
+        $this->_queue->pushAndMerge($predicate);
         return $this;
     }
 }

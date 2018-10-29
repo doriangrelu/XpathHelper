@@ -11,5 +11,5 @@ namespace Dorian\XPathHelper\Interfaces;
 
 interface XPathAxesInterface
 {
-
+    public function __toString();
 }
