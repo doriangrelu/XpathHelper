@@ -122,8 +122,8 @@ class XPathHelper implements XPathAxesInterface
         if ($this->_fullExpression) {
             return $axe . '::' . $this->_getFilterWithNamespace($filter);
         }
-
-        return $this->_abbreviations[$axe] . $this->_getFilterWithNamespace($filter);
+        $abbreviation = $this->_abbreviations[$axe]!==null ? $this->_abbreviations[$axe]:$axe;
+        return $abbreviation . $this->_getFilterWithNamespace($filter);
     }
 
     /**
@@ -132,7 +132,7 @@ class XPathHelper implements XPathAxesInterface
      */
     private function _getFilterWithNamespace(string $filter): string
     {
-        if (strpos($filter, ':') !== false && !is_null($this->_getNamesapce())) {
+        if (strpos($filter, ':') === false && !is_null($this->_getNamesapce())) {
             return $this->_getNamesapce() . ':' . $filter;
         }
         return $filter;
@@ -143,6 +143,7 @@ class XPathHelper implements XPathAxesInterface
         if (is_null($this->_uriNamesapce) && is_null($this->_alliasNamespace)) {
             return null;
         }
+
         if (!is_null($this->_alliasNamespace)) {
             return $this->_alliasNamespace;
         }

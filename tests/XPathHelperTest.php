@@ -34,7 +34,20 @@ class XPathHelperTest extends TestCase
 
     public function testNamespaceMecanism()
     {
+        $helper = new XPathHelper('', true);
+        $helper->setDefaultNamespace('p', 'http://test.fr')
+            ->children('sam')
+            ->descendantOrSelf('dorian');
+        $this->assertEquals("./child::p:sam/descendant-or-self::p:dorian", $helper->__toString());
+    }
 
+    public function testAbbreviations()
+    {
+        $helper = new XPathHelper('', false, false);
+        $helper->setDefaultNamespace('p', 'http://test.fr')
+            ->children('sam')
+            ->descendantOrSelf('dorian');
+        $this->assertEquals("/p:sam//p:dorian", $helper->__toString());
     }
 
     public function testEmptyExpressionReaction()
